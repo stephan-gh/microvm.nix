@@ -23,3 +23,19 @@ packages.x86_64-linux.my-microvm = self.nixosConfigurations.my-microvm.config.mi
 ```
 
 You can then run the MicroVM with a simple `nix run .#my-microvm`
+
+## Pass extra hypervisor arguments
+
+Arguments after `--` are forwarded to the hypervisor for that invocation.
+For example, when debugging an early boot failure in a QEMU guest:
+
+```bash
+nix run .#my-microvm -- -s -S
+```
+
+The `-s` option opens QEMU's GDB server on TCP port 1234, and `-S` keeps
+the guest paused until the debugger resumes it. This lets you attach a
+debugger before the guest boots without changing the VM configuration.
+
+These arguments are appended after the configured hypervisor arguments
+and any arguments produced by `microvm.extraArgsScript`.
